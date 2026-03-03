@@ -55,6 +55,25 @@ public static class MaximaDetector
         return maxVal;
     }
 
+    public static int DetectbiggestGapInValues(List<int> listValues)
+    {
+        if (listValues.Count < 2)
+        {
+            return 0;
+        }
+        int minVal = listValues[0];
+        int biggestGapInValues = 0;
+        for (int i = 1; i < listValues.Count; i++)
+        {
+            minVal = minVal < listValues[i] ? minVal : listValues[i];
+            biggestGapInValues =
+                biggestGapInValues > listValues[i] - minVal
+                    ? biggestGapInValues
+                    : listValues[i] - minVal;
+        }
+        return biggestGapInValues;
+    }
+
     public static int CorrectedDetect(List<int> listValues)
     {
         if (listValues.Count < 2)
