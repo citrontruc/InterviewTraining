@@ -90,4 +90,74 @@ public class BestBuyAndSellStock
         listVariations.RemoveAt(i);
         return listVariations;
     }
+
+    public static int MaxProfitWithTwoPass(int[] prices)
+    {
+        if (prices == null || prices.Length < 2)
+            return 0;
+
+        int n = prices.Length;
+        int[] leftProfits = new int[n];
+        int[] rightProfits = new int[n];
+
+        // Forward pass: Max profit with one transaction ending at or before day i
+        int minPrice = prices[0];
+        for (int i = 1; i < n; i++)
+        {
+            minPrice = Math.Min(minPrice, prices[i]);
+            leftProfits[i] = Math.Max(leftProfits[i - 1], prices[i] - minPrice);
+        }
+
+        // Backward pass: Max profit with one transaction starting at or after day i
+        int maxPrice = prices[n - 1];
+        for (int i = n - 2; i >= 0; i--)
+        {
+            maxPrice = Math.Max(maxPrice, prices[i]);
+            rightProfits[i] = Math.Max(rightProfits[i + 1], maxPrice - prices[i]);
+        }
+
+        // Combine results
+        int maxTotalProfit = 0;
+        for (int i = 0; i < n; i++)
+        {
+            maxTotalProfit = Math.Max(maxTotalProfit, leftProfits[i] + rightProfits[i]);
+        }
+
+        return maxTotalProfit;
+    }
+
+    public static int MaxProfit(int k, int[] prices)
+    {
+        if (prices.Length == 0 || k == 0)
+            return 0;
+
+        // Optimization: If k is large, it's equivalent to unlimited transactions
+        if (k >= prices.Length / 2)
+        {
+            int profit = 0;
+            for (int i = 1; i < prices.Length; i++)
+            {
+                if (prices[i] > prices[i - 1])
+                    profit += prices[i] - prices[i - 1];
+            }
+            return profit;
+        }
+
+        int[] minCosts = new int[k + 1];
+        int[] maxProfits = new int[k + 1];
+        Array.Fill(minCosts, int.MaxValue);
+
+        foreach (int price in prices)
+        {
+            for (int j = 1; j <= k; j++)
+            {
+                // Best price to buy the j-th stock (offset by previous profit)
+                minCosts[j] = Math.Min(minCosts[j], price - maxProfits[j - 1]);
+                // Best profit to sell the j-th stock
+                maxProfits[j] = Math.Max(maxProfits[j], price - minCosts[j]);
+            }
+        }
+
+        return maxProfits[k];
+    }
 }
