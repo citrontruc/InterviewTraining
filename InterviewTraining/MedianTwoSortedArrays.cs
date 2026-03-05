@@ -1,5 +1,7 @@
-public class MedianSortedArrays {
-    public static double FindMedianSortedArrays(int[] nums1, int[] nums2) {
+public class MedianSortedArrays
+{
+    public static double FindMedianSortedArrays(int[] nums1, int[] nums2)
+    {
         int pointer1 = 0;
         int pointer2 = 0;
         int previousValue = 0;
@@ -19,7 +21,8 @@ public class MedianSortedArrays {
         {
             if (pointer1 > nums1.Length - 1)
             {
-                while (pointer1 + pointer2 <= countValues / 2){
+                while (pointer1 + pointer2 <= countValues / 2)
+                {
                     previousValue = currentValue;
                     currentValue = nums2[pointer2];
                     pointer2++;
@@ -29,7 +32,8 @@ public class MedianSortedArrays {
 
             if (pointer2 > nums2.Length - 1)
             {
-                while (pointer1 + pointer2 <= countValues / 2){
+                while (pointer1 + pointer2 <= countValues / 2)
+                {
                     previousValue = currentValue;
                     currentValue = nums1[pointer1];
                     pointer1++;
@@ -50,7 +54,8 @@ public class MedianSortedArrays {
                 pointer2++;
             }
         }
-        if (countValues % 2 == 1){
+        if (countValues % 2 == 1)
+        {
             return currentValue;
         }
         return (double)(currentValue + previousValue) / 2;
