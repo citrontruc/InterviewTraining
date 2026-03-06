@@ -25,7 +25,7 @@ public class Node
 
 public class GraphSolution
 {
-    public static Node CloneGraph(Node node)
+    public static Node? CloneGraph(Node node)
     {
         if (node is null)
         {

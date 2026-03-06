@@ -160,4 +160,55 @@ public class BestBuyAndSellStock
 
         return maxProfits[k];
     }
+
+    public static int MaxProfitTest(int[] prices)
+    {
+        if (prices.Length < 2)
+        {
+            return 0;
+        }
+        int[] arrayProfit = new int[prices.Length];
+        Array.Fill(arrayProfit, 0);
+        (int minValueLeft, int maxValueLeft) = (0, 0);
+        (int minValueRight, int maxValueRight) = (0, 0);
+
+        for (int i = 0; i < prices.Length; i++)
+        {
+            if (
+                (minValueLeft == maxValueLeft)
+                || (i == minValueRight)
+                || (prices[i] > prices[maxValueLeft])
+            )
+            {
+                (minValueLeft, maxValueLeft) = GetIndexMinMax(prices[..i]);
+                (minValueRight, maxValueRight) = GetIndexMinMax(prices[i..]);
+                minValueRight += i;
+                maxValueRight += i;
+                arrayProfit[i] =
+                    Math.Max(prices[maxValueLeft] - prices[minValueLeft], 0)
+                    + Math.Max(0, prices[maxValueRight] - prices[minValueRight]);
+            }
+        }
+        return arrayProfit.Max();
+    }
+
+    public static (int, int) GetIndexMinMax(int[] pricesSpan)
+    {
+        int indexMin = 0;
+        int indexMax = Math.Max(0, pricesSpan.Length - 1);
+        int minValueReached = 0;
+        int maxValue = 0;
+
+        for (int i = 0; i < pricesSpan.Length; i++)
+        {
+            minValueReached = pricesSpan[minValueReached] < pricesSpan[i] ? minValueReached : i;
+            if (maxValue < pricesSpan[i] - pricesSpan[minValueReached])
+            {
+                maxValue = pricesSpan[i] - pricesSpan[minValueReached];
+                indexMax = i;
+                indexMin = minValueReached;
+            }
+        }
+        return (indexMin, indexMax);
+    }
 }
