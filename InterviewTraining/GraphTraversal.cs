@@ -85,4 +85,55 @@ public class GraphTraversalSolution
         }
         return false;
     }
+
+    public bool DepthFirstSearch(int n, int[][] edges, int source, int destination)
+    {
+        if (source == destination)
+        {
+            return true;
+        }
+        Dictionary<int, List<int>> dictPaths = new();
+        foreach (int[] edge in edges)
+        {
+            if (!dictPaths.ContainsKey(edge[0]))
+            {
+                dictPaths[edge[0]] = new();
+            }
+
+            if (!dictPaths.ContainsKey(edge[1]))
+            {
+                dictPaths[edge[1]] = new();
+            }
+            dictPaths[edge[0]].Add(edge[1]);
+            dictPaths[edge[1]].Add(edge[0]);
+        }
+
+        int currentNode = source;
+        bool[] alreadyVisited = new bool[n];
+        Array.Fill(alreadyVisited, false);
+        return VisitDepth(source, dictPaths, ref alreadyVisited, destination);
+    }
+
+    public bool VisitDepth(
+        int node,
+        Dictionary<int, List<int>> dictPaths,
+        ref bool[] alreadyVisited,
+        int destination
+    )
+    {
+        if (node == destination)
+            return true;
+        if (alreadyVisited[node])
+            return false;
+        alreadyVisited[node] = true;
+        foreach (int childNode in dictPaths[node])
+        {
+            if (!alreadyVisited[childNode])
+            {
+                if (VisitDepth(childNode, dictPaths, ref alreadyVisited, destination))
+                    return true;
+            }
+        }
+        return false;
+    }
 }
