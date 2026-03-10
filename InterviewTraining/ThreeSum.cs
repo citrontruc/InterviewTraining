@@ -52,4 +52,48 @@ public class ThreeSumClass
         }
         return result;
     }
+
+    public static int ThreeSumClosest(int[] nums, int target)
+    {
+        nums.Sort();
+        int minGap = int.MaxValue;
+        int bestValue = int.MaxValue;
+        for (int i = 0; i < nums.Count() - 2; i++)
+        {
+            int j = i + 1;
+            int k = nums.Count() - 1;
+            int currentValue = nums[i] + nums[j] + nums[k];
+            while (true)
+            {
+                if (Math.Abs(target - currentValue) < minGap)
+                {
+                    minGap = Math.Abs(target - currentValue);
+                    bestValue = currentValue;
+                }
+
+                if (currentValue > target)
+                {
+                    k--;
+                }
+
+                if (currentValue < target)
+                {
+                    j++;
+                }
+
+                if (currentValue == target)
+                {
+                    return currentValue;
+                }
+
+                if (k <= j)
+                {
+                    break;
+                }
+
+                currentValue = nums[i] + nums[j] + nums[k];
+            }
+        }
+        return bestValue;
+    }
 }
