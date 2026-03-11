@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 public class ThreeSumClass
 {
     public static IList<IList<int>> ThreeSum(int[] nums)
@@ -162,6 +164,53 @@ public class ThreeSumClass
             if (combination.Count == combination.Distinct().Count())
             {
                 result.Add(combination.Select(x => nums[x]).ToList());
+            }
+        }
+
+        return result
+            .GroupBy(inner => string.Join(",", inner))
+            .Select(group => group.First())
+            .ToList();
+    }
+
+    public static IList<IList<int>> FourSum(int[] nums, int target)
+    {
+        List<IList<int>> result = new();
+        if (nums.Length < 4)
+        {
+            return result;
+        }
+        nums.Sort();
+
+        for (int i = 0; i < nums.Length - 3; i++)
+        {
+            for (int j = nums.Length - 1; j > i + 2; j--)
+            {
+                int leftPointer = i + 1;
+                int rightPointer = j - 1;
+                while (leftPointer < rightPointer)
+                {
+                    switch (
+                        (long)nums[i]
+                        + (long)nums[j]
+                        + (long)nums[rightPointer]
+                        + (long)nums[leftPointer]
+                        - target
+                    )
+                    {
+                        case > 0:
+                            rightPointer--;
+                            break;
+                        case 0:
+                            result.Add([nums[i], nums[leftPointer], nums[rightPointer], nums[j]]);
+                            rightPointer--;
+                            leftPointer++;
+                            continue;
+                        case < 0:
+                            leftPointer++;
+                            break;
+                    }
+                }
             }
         }
 
