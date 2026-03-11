@@ -96,4 +96,78 @@ public class ThreeSumClass
         }
         return bestValue;
     }
+
+    public static IList<IList<int>> FourSumNotOptimal(int[] nums, int target)
+    {
+        Dictionary<int, List<List<int>>> dictResultIndex = new();
+        List<IList<int>> result = new();
+
+        for (int i = 0; i < nums.Length; i++)
+        {
+            for (int j = i + 1; j < nums.Length; j++)
+            {
+                int interResult = nums[i] + nums[j];
+                if (!dictResultIndex.ContainsKey(interResult))
+                {
+                    dictResultIndex[interResult] = new();
+                }
+                dictResultIndex[interResult].Add(new List<int> { i, j });
+            }
+        }
+        int[] dictKeys = dictResultIndex.Keys.ToArray();
+        dictKeys.Sort();
+        int leftIndex = 0;
+        int rightIndex = dictKeys.Length - 1;
+        while (leftIndex <= rightIndex)
+        {
+            switch (dictKeys[rightIndex] + dictKeys[leftIndex] - target)
+            {
+                case > 0:
+                    rightIndex--;
+                    break;
+                case 0:
+                    result.AddRange(
+                        GetAllCombinations(
+                            dictResultIndex[dictKeys[rightIndex]],
+                            dictResultIndex[dictKeys[leftIndex]],
+                            nums
+                        )
+                    );
+                    leftIndex++;
+                    rightIndex--;
+                    break;
+                case < 0:
+                    leftIndex++;
+                    break;
+            }
+        }
+        return result
+            .GroupBy(inner => string.Join(",", inner))
+            .Select(group => group.First())
+            .ToList();
+    }
+
+    public static List<List<int>> GetAllCombinations(
+        List<List<int>> listA,
+        List<List<int>> listB,
+        int[] nums
+    )
+    {
+        var combinations = listA
+            .SelectMany(l1 => listB.Select(l2 => l1.Concat(l2).ToList()))
+            .ToList();
+        List<List<int>> result = new();
+        foreach (List<int> combination in combinations)
+        {
+            if (combination.Count == combination.Distinct().Count())
+            {
+                result.Add(combination.Select(x => nums[x]).ToList());
+            }
+        }
+
+        return result
+            .GroupBy(inner => string.Join(",", inner))
+            .Select(group => group.First())
+            .ToList();
+    }
 }
