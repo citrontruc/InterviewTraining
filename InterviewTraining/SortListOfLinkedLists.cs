@@ -1,9 +1,9 @@
 public class ListNode
 {
     public int val;
-    public ListNode next;
+    public ListNode? next;
 
-    public ListNode(int val = 0, ListNode next = null)
+    public ListNode(int val = 0, ListNode? next = null)
     {
         this.val = val;
         this.next = next;
@@ -12,7 +12,7 @@ public class ListNode
 
 public static class SortListOfLinkedList
 {
-    public static ListNode MergeKLists(ListNode[] lists)
+    public static ListNode? MergeKLists(ListNode[] lists)
     {
         if (lists.Length == 0)
         {
