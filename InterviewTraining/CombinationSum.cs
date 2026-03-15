@@ -1,20 +1,40 @@
-public class CombinationSumClass
+public static class CombinationSumClass
 {
-    public IList<IList<int>> CombinationSum(int[] candidates, int target)
+    public static IList<IList<int>> CombinationSum(int[] candidates, int target)
     {
-        List<IList<int>> result = new();
-
-        for (int i = 0; i < candidates.Length; i++) { }
-
-        return result;
+        return FindValidCandidateCombination(new(), target, candidates);
     }
 
-    public List<int> FindValidCandidateCombination(
-        int[] candidates,
+    public static IList<IList<int>> FindValidCandidateCombination(
+        List<int> currentList,
         int target,
-        List<int> CurrentCandidateGapDictionary
+        int[] CurrentCandidateArray
     )
     {
-        return new();
+        List<IList<int>> result = new();
+        int listSum = currentList.Sum();
+        for (int i = 0; i < CurrentCandidateArray.Length; i++)
+        {
+            switch (listSum + CurrentCandidateArray[i] - target)
+            {
+                case 0:
+                    List<int> nextStepList = currentList.Append(CurrentCandidateArray[i]).ToList();
+                    result.Add(nextStepList);
+                    break;
+                case < 0:
+                    nextStepList = currentList.Append(CurrentCandidateArray[i]).ToList();
+                    result.AddRange(
+                        FindValidCandidateCombination(
+                            nextStepList,
+                            target,
+                            CurrentCandidateArray[i..]
+                        )
+                    );
+                    break;
+                default:
+                    break;
+            }
+        }
+        return result;
     }
 }
