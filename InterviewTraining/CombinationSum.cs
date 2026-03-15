@@ -2,6 +2,7 @@ public static class CombinationSumClass
 {
     public static IList<IList<int>> CombinationSum(int[] candidates, int target)
     {
+        candidates.Sort();
         return FindValidCandidateCombination(new(), target, candidates);
     }
 
@@ -13,19 +14,18 @@ public static class CombinationSumClass
     {
         List<IList<int>> result = new();
         int listSum = currentList.Sum();
-        for (int i = 0; i < CurrentCandidateArray.Length; i++)
+        int i = 0;
+        while (i < CurrentCandidateArray.Length && listSum + CurrentCandidateArray[i] - target <= 0)
         {
             switch (listSum + CurrentCandidateArray[i] - target)
             {
                 case 0:
-                    List<int> nextStepList = currentList.Append(CurrentCandidateArray[i]).ToList();
-                    result.Add(nextStepList);
+                    result.Add(currentList.Append(CurrentCandidateArray[i]).ToList());
                     break;
                 case < 0:
-                    nextStepList = currentList.Append(CurrentCandidateArray[i]).ToList();
                     result.AddRange(
                         FindValidCandidateCombination(
-                            nextStepList,
+                            currentList.Append(CurrentCandidateArray[i]).ToList(),
                             target,
                             CurrentCandidateArray[i..]
                         )
@@ -34,6 +34,7 @@ public static class CombinationSumClass
                 default:
                     break;
             }
+            i++;
         }
         return result;
     }
